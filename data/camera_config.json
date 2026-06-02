@@ -1,0 +1,48 @@
+{
+  "store_id": "STORE_BLR_002",
+  "cameras": [
+    {
+      "camera_id": "CAM_1",
+      "video_path": "data/videos/cam_1.mp4",
+      "role": "MAIN_FLOOR_A",
+      "enabled": true,
+      "fps": 29.97
+    },
+    {
+      "camera_id": "CAM_2",
+      "video_path": "data/videos/cam_2.mp4",
+      "role": "MAIN_FLOOR_B",
+      "enabled": true,
+      "fps": 29.97
+    },
+    {
+      "camera_id": "CAM_3",
+      "video_path": "data/videos/cam_3.mp4",
+      "role": "ENTRY_EXIT",
+      "enabled": true,
+      "fps": 29.97,
+      "entry_line_x": 960,
+      "entry_direction": "RIGHT_TO_LEFT"
+    },
+    {
+      "camera_id": "CAM_4",
+      "video_path": "data/videos/cam_4.mp4",
+      "role": "STAFF_ONLY",
+      "enabled": false,
+      "fps": 25
+    },
+    {
+      "camera_id": "CAM_5",
+      "video_path": "data/videos/cam_5.mp4",
+      "role": "BILLING_COUNTER",
+      "enabled": true,
+      "fps": 25,
+      "queue_roi": [
+        [0, 650],
+        [650, 650],
+        [650, 1080],
+        [0, 1080]
+       ]
+    }
+  ]
+}

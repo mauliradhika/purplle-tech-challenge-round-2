@@ -1,0 +1,71 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+
+# Virtual env
+venv/
+.env
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Output files
+output/
+runs/
+
+# Dataset / videos
+data/*
+!data/camera_config.json
+!data/.gitkeep
+
+# Logs
+*.log
+
+# Test cache
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Node (future frontend/backend)
+node_modules/
+.next/
+dist/
+
+# Docker
+*.pid
+
+# databases
+*.db
+store_intelligence.db
+# Local databases
+*.db
+store_intelligence.db
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local environments
+venv/
+pipeline/venv/
+
+# Generated outputs
+output/tracked
+runs/
+
+# Large raw media
+data/videos/
+*.mp4
+
+# Frontend build/cache
+client/node_modules/
+client/.next/

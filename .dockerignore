@@ -1,0 +1,28 @@
+# Git
+.git/
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+pipeline/venv/
+
+# Frontend
+client/node_modules/
+client/.next/
+
+# Large raw videos
+data/videos/
+*.mp4
+*.avi
+*.mov
+
+# Generated output/cache
+output/tracked
+runs/
+store_intelligence.db
+
+# OS
+.DS_Store
