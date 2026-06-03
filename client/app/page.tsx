@@ -15,6 +15,7 @@ import { useDashboardData } from '@/hooks/useDashboardData'
 import LoadingScreen        from '@/components/LoadingScreen'
 import ErrorScreen          from '@/components/ErrorScreen'
 import { RefreshCountdown } from '@/components/RefreshCountdown'
+import MetricCard from '@/components/MetricCard'
 
 /* ─── helpers ───────────────────────────────────────────────── */
 function fmtMs(ms: number) {
@@ -125,74 +126,64 @@ export default function Home() {
 
       <div className="mx-auto max-w-[1280px] px-8 pb-16 pt-8 space-y-12">
 
-        {/* ══ LIVE KPIs ═════════════════════════════════════════ */}
         <section>
           <Rule label="Live KPIs" />
-          <div className="grid grid-cols-4 gap-3">
 
-            {/* Hero — most active zone */}
-            <div className="card relative overflow-hidden px-6 py-6 bg-violet-500/[.07] border-violet-500/20">
-              <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-violet-600/10 blur-2xl pointer-events-none" />
-              <p className="mono text-[10px] uppercase tracking-[.16em] text-violet-400 mb-5">Most Active Zone</p>
-              <p className="num text-[2.2rem] font-extrabold leading-none text-violet-200 break-words">
-                {metrics.busiest_zone || 'N/A'}
-              </p>
-              <p className="mt-2 text-[12px] text-zinc-500">Highest visitor activity</p>
-              <div className="mt-5 flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="mono text-[10px] font-semibold text-zinc-500 tracking-widest uppercase">Live</span>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
 
-            {/* Total events */}
-            <div className="card px-6 py-6">
-              <p className="mono text-[10px] uppercase tracking-[.16em] text-zinc-600 mb-5">Total Events</p>
-              <p className="num text-[2.2rem] font-extrabold leading-none text-zinc-100 tabular-nums">
-                {metrics.total_events.toLocaleString()}
-              </p>
-              <p className="mt-2 text-[12px] text-zinc-500">Validated CCTV events</p>
-            </div>
+            <MetricCard
+              title="Most Active Zone"
+              value={metrics.busiest_zone || 'N/A'}
+              subtitle="Highest visitor activity right now"
+              status="LIVE"
+              variant="purple"
+            />
 
-            {/* Unique visitors */}
-            <div className="card px-6 py-6">
-              <p className="mono text-[10px] uppercase tracking-[.16em] text-zinc-600 mb-5">Unique Visitors</p>
-              <p className="num text-[2.2rem] font-extrabold leading-none text-zinc-100 tabular-nums">
-                {metrics.unique_visitors}
-              </p>
-              <p className="mt-2 text-[12px] text-zinc-500">Confirmed entry crossings</p>
-              <div className="mt-5">
-                <Pill variant={metrics.unique_visitors > 10 ? 'good' : metrics.unique_visitors > 0 ? 'warn' : 'bad'}>
-                  {metrics.unique_visitors > 10 ? 'Healthy' : metrics.unique_visitors > 0 ? 'Low Traffic' : 'No Traffic'}
-                </Pill>
-              </div>
-            </div>
+            <MetricCard
+              title="Total Events"
+              value={metrics.total_events.toLocaleString()}
+              subtitle="Validated CCTV events"
+            />
 
-            {/* Billing queue */}
-            <div className={`card px-6 py-6 ${
-              queueVariant === 'good' ? 'border-emerald-500/20' :
-              queueVariant === 'warn' ? 'border-amber-500/20'  : 'border-rose-500/20'}`}>
-              <p className="mono text-[10px] uppercase tracking-[.16em] text-zinc-600 mb-5">Billing Queue</p>
-              <div className="flex items-baseline gap-2">
-                <p className={`num text-[2.2rem] font-extrabold leading-none tabular-nums ${
-                  queueVariant === 'good' ? 'text-emerald-300' :
-                  queueVariant === 'warn' ? 'text-amber-300'   : 'text-rose-300'}`}>
-                  {metrics.current_queue_depth}
-                </p>
-                <span className="text-sm text-zinc-600">in queue</span>
-              </div>
-              <p className={`mt-2 text-[12px] ${
-                queueVariant === 'good' ? 'text-emerald-600' :
-                queueVariant === 'warn' ? 'text-amber-600'   : 'text-rose-600'}`}>
-                {queueVariant === 'good' ? 'Checkout flowing normally.'
-                : queueVariant === 'warn' ? 'Queue building — monitor.'
-                : 'Congestion. Open another counter.'}
-              </p>
-              <div className="mt-5">
-                <Pill variant={queueVariant}>
-                  {queueVariant === 'good' ? 'Clear' : queueVariant === 'warn' ? 'Building Up' : 'Congested'}
-                </Pill>
-              </div>
-            </div>
+            <MetricCard
+              title="Unique Visitors"
+              value={metrics.unique_visitors}
+              subtitle="Confirmed entry crossings"
+              status={
+                metrics.unique_visitors > 10
+                  ? 'HEALTHY'
+                  : metrics.unique_visitors > 0
+                  ? 'LOW TRAFFIC'
+                  : 'NO TRAFFIC'
+              }
+              variant={
+                metrics.unique_visitors > 10
+                  ? 'success'
+                  : metrics.unique_visitors > 0
+                  ? 'warning'
+                  : 'danger'
+              }
+            />
+
+            <MetricCard
+              title="Billing Queue"
+              value={metrics.current_queue_depth}
+              subtitle="Checkout flow status"
+              status={
+                queueVariant === 'good'
+                  ? 'CLEAR'
+                  : queueVariant === 'warn'
+                  ? 'BUILDING'
+                  : 'CONGESTED'
+              }
+              variant={
+                queueVariant === 'good'
+                  ? 'success'
+                  : queueVariant === 'warn'
+                  ? 'warning'
+                  : 'danger'
+              }
+            />
 
           </div>
         </section>

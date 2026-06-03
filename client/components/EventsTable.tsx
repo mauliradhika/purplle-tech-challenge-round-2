@@ -1,66 +1,188 @@
-import { Event } from "@/lib/types";
+'use client'
 
-const eventTypeStyles: Record<string, string> = {
-  ENTRY: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
-  EXIT: "bg-zinc-700/50 text-zinc-400 border-white/8",
-  ZONE_ENTER: "bg-violet-500/10 text-violet-300 border-violet-500/20",
-  ZONE_EXIT: "bg-violet-500/8 text-violet-400 border-violet-500/15",
-  ZONE_DWELL: "bg-blue-500/10 text-blue-300 border-blue-500/20",
-  BILLING_QUEUE_JOIN: "bg-amber-500/10 text-amber-400 border-amber-500/20",
-};
+interface EventItem {
+  timestamp: string
+  camera_id: string
+  event_type: string
+  zone?: string
+  is_staff?: boolean
+  confidence?: number
+}
 
-export function EventsTable({ events }: { events: Event[] }) {
-  const recent = [...events].slice(-10).reverse();
+interface EventsTableProps {
+  events: EventItem[]
+}
 
+function eventTheme(type: string) {
+  const t = type?.toUpperCase()
+
+  if (t.includes('ENTRY'))
+    return 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+
+  if (t.includes('EXIT'))
+    return 'bg-white/5 text-zinc-400 border border-white/10'
+
+  if (t.includes('ZONE_ENTER'))
+    return 'bg-violet-500/10 text-violet-300 border border-violet-500/20'
+
+  if (t.includes('ZONE_EXIT'))
+    return 'bg-violet-500/5 text-violet-400 border border-violet-500/10'
+
+  if (t.includes('DWELL'))
+    return 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+
+  if (t.includes('BILLING'))
+    return 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+
+  return 'bg-white/5 text-zinc-400 border border-white/10'
+}
+
+function formatTime(timestamp: string) {
+  try {
+    return new Date(timestamp).toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    })
+  } catch {
+    return '--:--:--'
+  }
+}
+
+function formatEvent(type: string) {
+  return type
+    ?.replace(/_/g, ' ')
+    ?.toLowerCase()
+    ?.replace(/\b\w/g, l => l.toUpperCase())
+}
+
+export function EventsTable({
+  events,
+}: EventsTableProps) {
   return (
-    <div className="rounded-2xl border border-white/8 bg-zinc-900 overflow-hidden">
-      <div className="px-7 py-6 border-b border-white/6">
-        <p className="text-sm font-semibold text-zinc-100">Recent Events</p>
-        <p className="mt-0.5 text-xs text-zinc-500">
-          Latest 10 retail intelligence events captured from CCTV feeds
+    <div className="overflow-hidden rounded-[20px] border border-white/[0.06] bg-[#18181b]">
+      {/* HEADER */}
+
+      <div className="border-b border-white/[0.06] px-7 py-5">
+        <p className="text-sm font-semibold text-zinc-100">
+          Recent Events
+        </p>
+
+        <p className="mt-1 text-xs text-zinc-500">
+          Latest retail intelligence events captured from CCTV feeds
         </p>
       </div>
 
+      {/* TABLE */}
+
       <div className="overflow-x-auto">
-        <table className="w-full text-left">
+        <table className="w-full">
           <thead>
-            <tr className="border-b border-white/6">
-              {["Time", "Camera", "Event Type", "Zone", "Staff", "Confidence"].map((h) => (
-                <th key={h} className="px-7 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-600">
-                  {h}
-                </th>
-              ))}
+            <tr className="border-b border-white/[0.06]">
+              <th className="px-5 py-3 text-left text-[9px] uppercase tracking-[0.18em] text-zinc-600">
+                Time
+              </th>
+
+              <th className="px-5 py-3 text-left text-[9px] uppercase tracking-[0.18em] text-zinc-600">
+                Camera
+              </th>
+
+              <th className="px-5 py-3 text-left text-[9px] uppercase tracking-[0.18em] text-zinc-600">
+                Event
+              </th>
+
+              <th className="px-5 py-3 text-left text-[9px] uppercase tracking-[0.18em] text-zinc-600">
+                Zone
+              </th>
+
+              <th className="px-5 py-3 text-left text-[9px] uppercase tracking-[0.18em] text-zinc-600">
+                Staff
+              </th>
+
+              <th className="px-5 py-3 text-left text-[9px] uppercase tracking-[0.18em] text-zinc-600">
+                Confidence
+              </th>
             </tr>
           </thead>
+
           <tbody>
-            {recent.map((event, i) => (
+            {events.slice(0, 10).map((event, index) => (
               <tr
-                key={event.event_id}
-                className={`border-b border-white/4 transition-colors hover:bg-white/3 ${i % 2 === 0 ? '' : 'bg-white/1'}`}
+                key={index}
+                className="
+                  border-b border-white/[0.03]
+                  transition-colors
+                  hover:bg-white/[0.02]
+                "
               >
-                <td className="px-7 py-3.5 font-mono-dm text-xs text-zinc-500 tabular-nums">
-                  {new Date(event.timestamp).toLocaleTimeString()}
+                <td
+                  className="px-5 py-3 text-[11px] text-zinc-500"
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                  }}
+                >
+                  {formatTime(event.timestamp)}
                 </td>
-                <td className="px-7 py-3.5 font-mono-dm text-xs font-medium text-zinc-300">
+
+                <td
+                  className="px-5 py-3 text-[11px] font-semibold text-zinc-300"
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                  }}
+                >
                   {event.camera_id}
                 </td>
-                <td className="px-7 py-3.5">
-                  <span className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${
-                    eventTypeStyles[event.event_type] || "bg-zinc-800 text-zinc-400 border-white/8"
-                  }`}>
-                    {event.event_type}
+
+                <td className="px-5 py-3">
+                  <span
+                    className={`
+                      inline-flex
+                      rounded-full
+                      px-2.5
+                      py-1
+                      text-[9px]
+                      font-semibold
+                      uppercase
+                      tracking-wider
+                      ${eventTheme(event.event_type)}
+                    `}
+                    style={{
+                      fontFamily:
+                        "'DM Mono', monospace",
+                    }}
+                  >
+                    {formatEvent(event.event_type)}
                   </span>
                 </td>
-                <td className="px-7 py-3.5 text-xs text-zinc-400">
-                  {event.zone_id || <span className="text-zinc-700">—</span>}
+
+                <td className="px-5 py-3 text-xs text-zinc-500">
+                  {event.zone || '—'}
                 </td>
-                <td className="px-7 py-3.5">
-                  <span className={`text-xs font-medium ${event.is_staff ? "text-amber-400" : "text-zinc-600"}`}>
-                    {event.is_staff ? "Staff" : "Customer"}
-                  </span>
+
+                <td
+                  className={`px-5 py-3 text-xs font-semibold ${
+                    event.is_staff
+                      ? 'text-amber-400'
+                      : 'text-zinc-400'
+                  }`}
+                >
+                  {event.is_staff
+                    ? 'Staff'
+                    : 'Customer'}
                 </td>
-                <td className="px-7 py-3.5 font-mono-dm text-xs text-zinc-500 tabular-nums">
-                  {event.confidence != null ? `${(event.confidence * 100).toFixed(0)}%` : "—"}
+
+                <td
+                  className="px-5 py-3 text-[11px] text-zinc-500"
+                  style={{
+                    fontFamily: "'DM Mono', monospace",
+                  }}
+                >
+                  {event.confidence
+                    ? `${Math.round(
+                        event.confidence * 100
+                      )}%`
+                    : '--'}
                 </td>
               </tr>
             ))}
@@ -68,5 +190,5 @@ export function EventsTable({ events }: { events: Event[] }) {
         </table>
       </div>
     </div>
-  );
+  )
 }
