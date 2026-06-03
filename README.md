@@ -362,7 +362,7 @@ Example store ID: `STORE_BLR_002`
 **1. Clone Repository**
 
 ```bash
-git clone https://github.com/SHIVAM-KUMAR-59/purplle-tech-challenge-round-2.git
+git clone https://github.com/mauliradhika/purplle-tech-challenge-round-2.git
 cd purplle-tech-challenge-round-2
 ```
 
