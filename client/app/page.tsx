@@ -463,8 +463,15 @@ export default function Home() {
         <section>
           <Rule label="Zone Activity & Anomalies" />
           <div className="grid grid-cols-2 gap-3">
-            <div className="card px-6 py-6"><HeatmapPanel zones={heatmap.zones} /></div>
-            <div className="card px-6 py-6"><AnomaliesPanel anomalies={anomalies.active_anomalies} /></div>
+            <div className="card px-6 py-6"><HeatmapPanel zones={heatmap.zones.map((zone) => ({ zone_name: zone.zone_id, visitor_count: zone.visit_count, avg_dwell_time_seconds: Math.round(zone.avg_dwell_ms / 1000), activity_score: zone.intensity }))} /></div>
+            <div className="card px-6 py-6">
+              <AnomaliesPanel
+                anomalies={anomalies.active_anomalies.map((anomaly) => ({
+                  ...anomaly,
+                  anomaly_type: (anomaly as any).anomaly_type ?? (anomaly as any).type ?? 'UNKNOWN',
+                }))}
+              />
+            </div>
           </div>
         </section>
 
