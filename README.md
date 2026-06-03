@@ -122,7 +122,7 @@ Generates explainable, deterministic business recommendations by combining CCTV 
 
 ### Recommendation Engine
 
-![Recommneddations](assets/recommmendations.png)
+![Recommneddations](assets/recommendations.png)
 
 ---
 
